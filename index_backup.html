@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Lilin Hidup - Coklat Manis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        /* LATAR BELAKANG COKLAT MANIS (SAMA DENGAN SEBELUMNYA) */
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #8B5A2B 0%, #6B3E1A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, 'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* tekstur bubuk coklat & butiran manis */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 25% 40%, rgba(255, 215, 150, 0.08) 2%, transparent 2.5%),
+                radial-gradient(circle at 70% 85%, rgba(210, 150, 75, 0.1) 1.8%, transparent 2.2%),
+                repeating-linear-gradient(45deg, rgba(120, 60, 25, 0.05) 0px, rgba(120, 60, 25, 0.05) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* kilau manis */
+        body::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(2px 2px at 15% 30%, #fff6e0, rgba(0, 0, 0, 0)),
+                radial-gradient(3px 3px at 92% 70%, #ffefc0, rgba(0, 0, 0, 0));
+            background-size: 180px 180px, 250px 250px;
+            background-repeat: no-repeat;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* tetesan karamel di bawah */
+        .caramel-drip {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: repeating-linear-gradient(90deg, #b97f44 0px, #b97f44 15px, #d49c5f 15px, #d49c5f 30px);
+            mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* container utama lilin */
+        .candle-container {
+            position: relative;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.3));
+            animation: gentle-float 4s ease-in-out infinite;
+        }
+
+        @keyframes gentle-float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* BATANG LILIN SEDERHANA */
+        .candle-body {
+            position: relative;
+            width: 50px;
+            height: 160px;
+            background: linear-gradient(135deg, #f9e0b0, #f5cd94, #efbc7b);
+            border-radius: 20px 20px 15px 15px;
+            box-shadow: inset -3px -5px 0px rgba(100, 50, 10, 0.15), 0 10px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        /* sumbu lilin sederhana */
+        .wick {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 18px;
+            background: #2a2418;
+            border-radius: 2px;
+            z-index: 5;
+        }
+
+        /* API LILIN UTAMA (hidup dengan flicker) */
+        .flame {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 52px;
+            background: radial-gradient(ellipse at 35% 40%, #ffdd88, #ff9900, #ff5500);
+            border-radius: 80% 20% 70% 30% / 60% 50% 50% 40%;
+            filter: blur(1px) drop-shadow(0 0 12px rgba(255, 80, 0, 0.7));
+            z-index: 10;
+            animation: flicker-core 0.15s infinite alternate, flame-shape 0.4s infinite alternate;
+            transform-origin: center bottom;
+        }
+
+        /* animasi flicker cepat */
+        @keyframes flicker-core {
+            0% {
+                opacity: 0.92;
+                transform: translateX(-50%) scaleY(1) scaleX(1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(-52%) scaleY(1.06) scaleX(0.94);
+            }
+        }
+
+        /* perubahan bentuk api */
+        @keyframes flame-shape {
+            0% {
+                border-radius: 80% 20% 70% 30% / 60% 50% 50% 40%;
+            }
+
+            25% {
+                border-radius: 65% 35% 55% 45% / 55% 60% 40% 45%;
+            }
+
+            50% {
+                border-radius: 70% 30% 60% 40% / 50% 55% 45% 50%;
+            }
+
+            75% {
+                border-radius: 85% 15% 65% 35% / 58% 48% 52% 42%;
+            }
+
+            100% {
+                border-radius: 75% 25% 68% 32% / 52% 62% 38% 48%;
+            }
+        }
+
+        /* api bagian dalam (lebih terang) */
+        .inner-flame {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 30px;
+            background: radial-gradient(ellipse at 40% 45%, #fff5cc, #ffcc55, #ffaa33);
+            border-radius: 60% 40% 55% 45% / 55% 50% 50% 45%;
+            filter: blur(1px);
+            z-index: 11;
+            animation: inner-flicker 0.12s infinite alternate, inner-shape 0.35s infinite alternate;
+            opacity: 0.9;
+        }
+
+        @keyframes inner-flicker {
+            0% {
+                opacity: 0.85;
+                transform: translateX(-50%) scale(0.94);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(-48%) scale(1.06);
+            }
+        }
+
+        @keyframes inner-shape {
+            0% {
+                border-radius: 60% 40% 55% 45% / 55% 50% 50% 45%;
+            }
+
+            100% {
+                border-radius: 50% 50% 45% 55% / 48% 55% 45% 52%;
+            }
+        }
+
+        /* efek cahaya di sekitar api */
+        .ambient-glow {
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 140, 50, 0.4), rgba(255, 80, 20, 0) 70%);
+            border-radius: 50%;
+            filter: blur(18px);
+            z-index: 2;
+            pointer-events: none;
+            animation: glow-pulse 1.2s infinite alternate;
+        }
+
+        @keyframes glow-pulse {
+            0% {
+                opacity: 0.5;
+                transform: translateX(-50%) scale(0.9);
+            }
+
+            100% {
+                opacity: 0.9;
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        /* teks minimal penambah tema */
+        .sweet-text {
+            margin-top: 24px;
+            font-size: 0.85rem;
+            background: rgba(60, 35, 15, 0.6);
+            backdrop-filter: blur(6px);
+            padding: 5px 16px;
+            border-radius: 40px;
+            color: #FFF0CF;
+            letter-spacing: 1px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 215, 150, 0.5);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* hover: api lebih terasa hidup */
+        .candle-container:hover .flame {
+            animation-duration: 0.1s, 0.3s;
+            filter: blur(0.5px) drop-shadow(0 0 16px #ff8822);
+        }
+
+        .candle-container:hover .ambient-glow {
+            animation-duration: 0.7s;
+        }
+
+        /* responsif */
+        @media (max-width: 550px) {
+            .candle-body {
+                width: 50px;
+                height: 130px;
+            }
+
+            .flame {
+                width: 26px;
+                height: 44px;
+                top: -36px;
+            }
+
+            .inner-flame {
+                width: 14px;
+                height: 26px;
+                top: -26px;
+            }
+
+            .ambient-glow {
+                width: 80px;
+                height: 80px;
+                top: -48px;
+            }
+
+            .wick {
+                height: 15px;
+                top: -8px;
+            }
+
+            .sweet-text {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* api mati */
+        .flame.off,
+        .inner-flame.off,
+        .ambient-glow.off {
+            animation: none !important;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* lilin geser keluar */
+        .candle-container.exit {
+            animation: slideOut 1s forwards;
+        }
+
+        @keyframes slideOut {
+            to {
+                transform: translateX(-200px);
+                opacity: 0;
+            }
+        }
+
+        /* container banyak lilin */
+        .multi-candles {
+            position: absolute;
+            bottom: 100px;
+            right: -100%;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* animasi masuk dari kanan */
+        .multi-candles.show {
+            animation: slideIn 1.5s forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                right: 50%;
+                transform: translateX(50%);
+            }
+        }
+
+        /* lilin kecil */
+        .small-candle {
+            width: 15px;
+            height: 60px;
+            background: linear-gradient(135deg, #f9e0b0, #efbc7b);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .small-candle::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 14px;
+            background: orange;
+            border-radius: 50%;
+        }
+
+        /* ucapan */
+        .birthday-text {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            font-size: 2rem;
+            color: #fff3d6;
+            /* background: rgba(60, 35, 15, 0.7); */
+            padding: 12px 24px;
+            border-radius: 20px;
+            /* border: 1px solid rgba(255, 210, 140, 0.6); */
+            opacity: 0;
+            transition: all 0.6s ease;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        /* muncul animasi */
+        .birthday-text.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* import font romantis */
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        .birthday-text {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            color: #ffe4c4;
+
+            /* text-shadow:
+                0 0 10px rgba(255, 200, 150, 0.8),
+                0 0 20px rgba(255, 150, 100, 0.6),
+                0 0 30px rgba(255, 120, 80, 0.5); */
+
+            opacity: 0;
+            transition: all 0.8s ease;
+            text-align: center;
+        }
+
+        /* animasi muncul lembut */
+        .birthday-text.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        #dragImage {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 80px;
+            /* kecil */
+            cursor: grab;
+            z-index: 9999;
+            touch-action: none;
+        }
+
+        #dragImage:active {
+            cursor: grabbing;
+        }
+
+        #hintBox {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: rgba(60, 35, 15, 0.8);
+            color: #fff3d6;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            z-index: 9999;
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        #hintBox.hide {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="candle-container">
+        <div class="ambient-glow"></div>
+
+        <!-- batang lillin saja (sederhana) -->
+        <div class="candle-body">
+            <div class="wick"></div>
+            <div class="flame"></div>
+            <div class="inner-flame"></div>
+        </div>
+    </div>
+
+    <img src="gambar1.png" id="dragImage">
+    <div id="hintBox">Drag me to the candle 🔥</div>
+    <div class="caramel-drip"></div>
+
+    <script>
+        (() => {
+            const flame = document.querySelector('.flame'),
+                inner = document.querySelector('.inner-flame'),
+                glow = document.querySelector('.ambient-glow');
+
+            if (flame) setInterval(() => {
+                if (!document.body.contains(flame)) return;
+
+                const sy = .97 + Math.random() * .1,
+                    sx = .95 + Math.random() * .08,
+                    ox = -51 + (Math.random() * 3 - 1.5);
+
+                flame.style.transform = `translateX(${ox}%) scale(${sx},${sy})`;
+
+                if (inner) {
+                    const s = .95 + Math.random() * .1,
+                        o = -49 + (Math.random() * 3 - 1.5);
+                    inner.style.transform = `translateX(${o}%) scale(${s})`;
+                }
+
+                if (glow) {
+                    const g = 85 + Math.random() * 25;
+                    glow.style.width = glow.style.height = g + 'px';
+                }
+            }, 130);
+        })();
+    </script>
+
+    <script>
+        let count = 0, max = 21, multi = null;
+
+        const candle = document.querySelector('.candle-container'),
+            flame = document.querySelector('.flame'),
+            inner = document.querySelector('.inner-flame'),
+            glow = document.querySelector('.ambient-glow');
+
+        function blowCandle() {
+            if (count >= max) return;
+
+            [flame, inner, glow].forEach(e => e.classList.add('off'));
+
+            setTimeout(() => candle.classList.add('exit'), 300);
+
+            setTimeout(() => {
+                candle.classList.remove('exit');
+                [flame, inner, glow].forEach(e => e.classList.remove('off'));
+
+                if (!multi) {
+                    multi = document.createElement('div');
+                    multi.className = 'multi-candles show';
+                    document.body.appendChild(multi);
+                }
+
+                const c = document.createElement('div');
+                c.className = 'small-candle';
+                c.style.cssText = 'transform:translateX(100px);opacity:0';
+                multi.appendChild(c);
+
+                setTimeout(() => {
+                    c.style.cssText = 'transition:.5s;transform:translateX(0);opacity:1';
+                }, 50);
+
+                count++;
+
+                if (count === 3) setTimeout(() => {
+                    candle.style.cssText = 'transition:.8s;opacity:0;transform:scale(.5)';
+                    if (multi) multi.style.cssText = 'transition:.8s;opacity:0;transform:translateY(40px)';
+
+                    setTimeout(() => {
+                        const t = document.createElement('div');
+                        t.className = 'birthday-text';
+                        t.innerText = 'Happy 21st Bday My Love 🎂';
+                        document.body.appendChild(t);
+                        setTimeout(() => t.classList.add('show'), 50);
+                    }, 800);
+                }, 500);
+
+            }, 1000);
+        }
+    </script>
+
+    <script>
+        const img = document.getElementById("dragImage"),
+            hint = document.getElementById("hintBox");
+
+        let drag = false, ox = 0, oy = 0, blown = false;
+
+        const move = (x, y) => {
+            img.style.left = x - ox + "px";
+            img.style.top = y - oy + "px";
+            img.style.right = img.style.bottom = "auto";
+        };
+
+        img.onmousedown = e => {
+            drag = true;
+            ox = e.clientX - img.offsetLeft;
+            oy = e.clientY - img.offsetTop;
+            hint?.classList.add("hide");
+        };
+
+        document.onmousemove = e => drag && move(e.clientX, e.clientY);
+        document.onmouseup = () => drag = false;
+
+        img.ontouchstart = e => {
+            drag = true;
+            const t = e.touches[0];
+            ox = t.clientX - img.offsetLeft;
+            oy = t.clientY - img.offsetTop;
+            hint?.classList.add("hide");
+        };
+
+        document.ontouchmove = e => {
+            if (!drag) return;
+            const t = e.touches[0];
+            move(t.clientX, t.clientY);
+        };
+
+        document.ontouchend = () => drag = false;
+
+        const overlap = (a, b) => {
+            const r1 = a.getBoundingClientRect(),
+                r2 = b.getBoundingClientRect();
+            return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
+        };
+
+        const check = () => {
+            if (overlap(img, flame)) {
+                img.src = "tiup.png";
+                if (!blown) {
+                    blown = true;
+                    blowCandle();
+                }
+            } else {
+                img.src = "gambar1.png";
+                blown = false;
+            }
+        };
+
+        document.addEventListener("mousemove", check);
+        document.addEventListener("touchmove", check);
+    </script>
+</body>
+
+</html>

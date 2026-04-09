@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Kado Spesial - Happy Birthday</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+/* ===== LAYAR KADO (AWAL) ===== */
+.gift-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(145deg, #f7e6d0, #f0d8bc);
+    z-index: 1000;
+    flex-direction: column;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.gift {
+    font-size: 90px;
+    transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.4s, filter 0.4s;
+    filter: drop-shadow(0 15px 20px rgba(0,0,0,0.2));
+}
+
+.gift-text {
+    margin-top: 20px;
+    font-size: 18px;
+    font-family: 'Segoe UI', system-ui;
+    color: #8B5A2B;
+    font-weight: 500;
+    letter-spacing: 1px;
+    background: rgba(255,245,225,0.7);
+    padding: 8px 20px;
+    border-radius: 40px;
+    backdrop-filter: blur(4px);
+}
+
+/* animasi membesar (meledak) */
+.gift.open {
+    transform: scale(3.2);
+    transition: transform 0.45s cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.gift.boom {
+    transform: scale(8);
+    opacity: 0;
+    filter: blur(18px);
+    transition: transform 0.5s ease-out, opacity 0.4s, filter 0.4s;
+}
+
+/* ===== HALAMAN UTAMA (LILIN + COKLAT) ===== */
+.main-container {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* LATAR COKLAT MANIS (dari index.html) */
+body.main-bg {
+    background: linear-gradient(145deg, #8B5A2B 0%, #6B3E1A 100%);
+    overflow-x: hidden;
+}
+
+body.main-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 25% 40%, rgba(255, 215, 150, 0.08) 2%, transparent 2.5%),
+                      radial-gradient(circle at 70% 85%, rgba(210, 150, 75, 0.1) 1.8%, transparent 2.2%),
+                      repeating-linear-gradient(45deg, rgba(120, 60, 25, 0.05) 0px, rgba(120, 60, 25, 0.05) 2px, transparent 2px, transparent 8px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.main-bg::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(2px 2px at 15% 30%, #fff6e0, rgba(0, 0, 0, 0)),
+                radial-gradient(3px 3px at 92% 70%, #ffefc0, rgba(0, 0, 0, 0));
+    background-size: 180px 180px, 250px 250px;
+    background-repeat: no-repeat;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.caramel-drip {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: repeating-linear-gradient(90deg, #b97f44 0px, #b97f44 15px, #d49c5f 15px, #d49c5f 30px);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* container lilin */
+.candle-container {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.3));
+    animation: gentle-float 4s ease-in-out infinite;
+}
+
+@keyframes gentle-float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+.candle-body {
+    position: relative;
+    width: 50px;
+    height: 160px;
+    background: linear-gradient(135deg, #f9e0b0, #f5cd94, #efbc7b);
+    border-radius: 20px 20px 15px 15px;
+    box-shadow: inset -3px -5px 0px rgba(100, 50, 10, 0.15), 0 10px 18px rgba(0, 0, 0, 0.3);
+}
+
+.wick {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 18px;
+    background: #2a2418;
+    border-radius: 2px;
+    z-index: 5;
+}
+
+.flame {
+    position: absolute;
+    top: -42px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 52px;
+    background: radial-gradient(ellipse at 35% 40%, #ffdd88, #ff9900, #ff5500);
+    border-radius: 80% 20% 70% 30% / 60% 50% 50% 40%;
+    filter: blur(1px) drop-shadow(0 0 12px rgba(255, 80, 0, 0.7));
+    z-index: 10;
+    animation: flicker-core 0.15s infinite alternate, flame-shape 0.4s infinite alternate;
+    transform-origin: center bottom;
+}
+
+@keyframes flicker-core {
+    0% { opacity: 0.92; transform: translateX(-50%) scaleY(1) scaleX(1); }
+    100% { opacity: 1; transform: translateX(-52%) scaleY(1.06) scaleX(0.94); }
+}
+
+@keyframes flame-shape {
+    0% { border-radius: 80% 20% 70% 30% / 60% 50% 50% 40%; }
+    25% { border-radius: 65% 35% 55% 45% / 55% 60% 40% 45%; }
+    50% { border-radius: 70% 30% 60% 40% / 50% 55% 45% 50%; }
+    75% { border-radius: 85% 15% 65% 35% / 58% 48% 52% 42%; }
+    100% { border-radius: 75% 25% 68% 32% / 52% 62% 38% 48%; }
+}
+
+.inner-flame {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 30px;
+    background: radial-gradient(ellipse at 40% 45%, #fff5cc, #ffcc55, #ffaa33);
+    border-radius: 60% 40% 55% 45% / 55% 50% 50% 45%;
+    filter: blur(1px);
+    z-index: 11;
+    animation: inner-flicker 0.12s infinite alternate, inner-shape 0.35s infinite alternate;
+    opacity: 0.9;
+}
+
+@keyframes inner-flicker {
+    0% { opacity: 0.85; transform: translateX(-50%) scale(0.94); }
+    100% { opacity: 1; transform: translateX(-48%) scale(1.06); }
+}
+
+@keyframes inner-shape {
+    0% { border-radius: 60% 40% 55% 45% / 55% 50% 50% 45%; }
+    100% { border-radius: 50% 50% 45% 55% / 48% 55% 45% 52%; }
+}
+
+.ambient-glow {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 140, 50, 0.4), rgba(255, 80, 20, 0) 70%);
+    border-radius: 50%;
+    filter: blur(18px);
+    z-index: 2;
+    pointer-events: none;
+    animation: glow-pulse 1.2s infinite alternate;
+}
+
+@keyframes glow-pulse {
+    0% { opacity: 0.5; transform: translateX(-50%) scale(0.9); }
+    100% { opacity: 0.9; transform: translateX(-50%) scale(1.1); }
+}
+
+.sweet-text {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    background: rgba(60, 35, 15, 0.6);
+    backdrop-filter: blur(6px);
+    padding: 5px 16px;
+    border-radius: 40px;
+    color: #FFF0CF;
+    letter-spacing: 1px;
+    font-weight: 500;
+    border: 1px solid rgba(255, 215, 150, 0.5);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+@media (max-width: 550px) {
+    .candle-body { width: 50px; height: 130px; }
+    .flame { width: 26px; height: 44px; top: -36px; }
+    .inner-flame { width: 14px; height: 26px; top: -26px; }
+    .ambient-glow { width: 80px; height: 80px; top: -48px; }
+    .wick { height: 15px; top: -8px; }
+    .sweet-text { font-size: 0.7rem; }
+}
+
+/* state api mati */
+.flame.off, .inner-flame.off, .ambient-glow.off {
+    animation: none !important;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.candle-container.exit {
+    animation: slideOut 1s forwards;
+}
+
+@keyframes slideOut {
+    to { transform: translateX(-200px); opacity: 0; }
+}
+
+.multi-candles {
+    position: absolute;
+    bottom: 100px;
+    right: -100%;
+    display: flex;
+    gap: 10px;
+}
+
+.multi-candles.show {
+    animation: slideIn 1.5s forwards;
+}
+
+@keyframes slideIn {
+    to { right: 50%; transform: translateX(50%); }
+}
+
+.small-candle {
+    width: 15px;
+    height: 60px;
+    background: linear-gradient(135deg, #f9e0b0, #efbc7b);
+    border-radius: 6px;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.small-candle::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 14px;
+    background: orange;
+    border-radius: 50%;
+    filter: blur(1px);
+    box-shadow: 0 0 5px orange;
+}
+
+.birthday-text {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    color: #ffe4c4;
+    opacity: 0;
+    transition: all 0.8s ease;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255,200,150,0.6);
+    z-index: 200;
+    white-space: wrap;
+    /* background: rgba(0,0,0,0.3); */
+    padding: 12px 28px;
+    border-radius: 60px;
+    backdrop-filter: blur(6px);
+}
+
+.birthday-text.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* gambar seret */
+#dragImage {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 75px;
+    cursor: grab;
+    z-index: 9999;
+    touch-action: none;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+    transition: transform 0.1s;
+}
+#dragImage:active { cursor: grabbing; }
+
+#hintBox {
+    position: fixed;
+    bottom: 110px;
+    right: 25px;
+    background: rgba(60, 35, 15, 0.85);
+    color: #fff3d6;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    z-index: 9999;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.3s;
+    backdrop-filter: blur(5px);
+    white-space: nowrap;
+}
+#hintBox.hide {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+</style>
+</head>
+<body>
+
+<!-- LAYAR KADO (muncul pertama) -->
+<div class="gift-screen" id="giftScreen">
+    <div class="gift" id="giftIcon">🎁</div>
+    <div class="gift-text">✨ from me for my bb ✨</div>
+</div>
+
+<!-- HALAMAN UTAMA (lilin + interaksi) -->
+<div class="main-container" id="mainContainer">
+    <div class="candle-container" id="candleMain">
+        <div class="ambient-glow"></div>
+        <div class="candle-body">
+            <div class="wick"></div>
+            <div class="flame" id="flameEl"></div>
+            <div class="inner-flame" id="innerFlameEl"></div>
+        </div>
+    </div>
+    <div class="caramel-drip"></div>
+    <img src="gambar1.png" id="dragImage">
+    <div id="hintBox">🔥 Drag me to the candle! 🔥</div>
+</div>
+
+<script>
+// ========== 1. BUKA KADO DENGAN ANIMASI MELEDAK ==========
+const giftScreen = document.getElementById('giftScreen');
+const giftIcon = document.getElementById('giftIcon');
+const mainContainer = document.getElementById('mainContainer');
+const bodyEl = document.body;
+let overlapStartTime = 0;
+const REQUIRED_HOLD_TIME = 800; // harus nempel 0.8 detik
+
+function openGift() {
+    // animasi membesar lalu meledak
+    giftIcon.classList.add('open');
+    
+    setTimeout(() => {
+        giftIcon.classList.add('boom');
+    }, 380);
+    
+    setTimeout(() => {
+        // sembunyikan layar kado, tampilkan halaman utama
+        giftScreen.style.display = 'none';
+        bodyEl.classList.add('main-bg');
+        mainContainer.style.opacity = '1';
+        
+        // trigger reflow agar transisi mulus
+        void mainContainer.offsetWidth;
+        
+        // mulai efek ambient nyala api dinamis (opsional)
+        startDynamicFlame();
+    }, 980);
+}
+
+// event click pada kado
+giftScreen.addEventListener('click', openGift);
+
+// ========== 2. LOGIC LILIN + TIUP / DRAG GAMBAR (DARI INDEX.HTML) ==========
+let blowCount = 0;
+const MAX_BLOW = 21;      // 21 kali tiup (ucapan 21 tahun)
+let multiCandlesContainer = null;
+let isFinalBlown = false;
+
+const candleContainer = document.querySelector('.candle-container');
+const flameEl = document.getElementById('flameEl');
+const innerFlameEl = document.getElementById('innerFlameEl');
+const glowEl = document.querySelector('.ambient-glow');
+
+// fungsi untuk mematikan api sementara dan memunculkan lilin kecil
+function blowCandleAction() {
+    if (blowCount >= MAX_BLOW || isFinalBlown) return;
+    
+    // matikan api (efek tiup)
+    if (flameEl) flameEl.classList.add('off');
+    if (innerFlameEl) innerFlameEl.classList.add('off');
+    if (glowEl) glowEl.classList.add('off');
+    
+    // slide out lilin utama (efek sedikit)
+    if (candleContainer) candleContainer.classList.add('exit');
+    
+    setTimeout(() => {
+        if (candleContainer) candleContainer.classList.remove('exit');
+        if (flameEl) flameEl.classList.remove('off');
+        if (innerFlameEl) innerFlameEl.classList.remove('off');
+        if (glowEl) glowEl.classList.remove('off');
+        
+        // buat wadah lilin-lilin kecil jika belum ada
+        if (!multiCandlesContainer) {
+            multiCandlesContainer = document.createElement('div');
+            multiCandlesContainer.className = 'multi-candles show';
+            document.body.appendChild(multiCandlesContainer);
+        }
+        
+        // tambah satu lilin kecil
+        const smallCandle = document.createElement('div');
+        smallCandle.className = 'small-candle';
+        smallCandle.style.cssText = 'transform:translateX(60px);opacity:0; transition: all 0.4s ease-out;';
+        multiCandlesContainer.appendChild(smallCandle);
+        
+        setTimeout(() => {
+            smallCandle.style.transform = 'translateX(0)';
+            smallCandle.style.opacity = '1';
+        }, 30);
+        
+        blowCount++;
+        
+        // saat mencapai 3 kali tiup -> muncul ucapan happy 21st (seperti logika awal dari index)
+        if (blowCount === 3 && !isFinalBlown) {
+            setTimeout(() => {
+                // lilin utama fade out + lilin kecil menghilang perlahan
+                if (candleContainer) {
+                    candleContainer.style.transition = 'opacity 0.8s, transform 0.8s';
+                    candleContainer.style.opacity = '0';
+                    candleContainer.style.transform = 'scale(0.6)';
+                }
+                if (multiCandlesContainer) {
+                    multiCandlesContainer.style.transition = 'opacity 0.8s, transform 0.6s';
+                    multiCandlesContainer.style.opacity = '0';
+                    multiCandlesContainer.style.transform = 'translateY(40px)';
+                }
+                
+                setTimeout(() => {
+                    const birthdayDiv = document.createElement('div');
+                    birthdayDiv.className = 'birthday-text';
+                    birthdayDiv.innerText = '🎂 Happy 21st Bday My Love 🎂';
+                    document.body.appendChild(birthdayDiv);
+                    setTimeout(() => birthdayDiv.classList.add('show'), 40);
+                    
+                    // opsional: hilangkan hint setelah berhasil
+                    const hintDiv = document.getElementById('hintBox');
+                    if (hintDiv) hintDiv.classList.add('hide');
+                }, 500);
+                isFinalBlown = true;
+            }, 300);
+        }
+    }, 800);
+}
+
+// ========== 3. FUNGSI DRAG GAMBAR KE API (DARI INDEX.HTML) ==========
+const dragImage = document.getElementById('dragImage');
+const hintBox = document.getElementById('hintBox');
+let isDragging = false;
+let dragOffsetX = 0, dragOffsetY = 0;
+let alreadyBlownForDrag = false;
+
+// posisi awal gambar
+dragImage.style.position = 'fixed';
+dragImage.style.bottom = '20px';
+dragImage.style.right = '20px';
+dragImage.style.left = 'auto';
+dragImage.style.top = 'auto';
+
+function onDragStart(clientX, clientY) {
+    isDragging = true;
+    const rect = dragImage.getBoundingClientRect();
+    dragOffsetX = clientX - rect.left;
+    dragOffsetY = clientY - rect.top;
+    if (hintBox) hintBox.classList.add('hide');
+    dragImage.style.transition = 'none';
+}
+
+function onDragMove(clientX, clientY) {
+    if (!isDragging) return;
+    let newLeft = clientX - dragOffsetX;
+    let newTop = clientY - dragOffsetY;
+    // batasi agar tidak keluar layar (opsional)
+    newLeft = Math.min(window.innerWidth - dragImage.offsetWidth, Math.max(0, newLeft));
+    newTop = Math.min(window.innerHeight - dragImage.offsetHeight, Math.max(0, newTop));
+    dragImage.style.left = newLeft + 'px';
+    dragImage.style.top = newTop + 'px';
+    dragImage.style.right = 'auto';
+    dragImage.style.bottom = 'auto';
+}
+
+function onDragEnd() {
+    isDragging = false;
+    dragImage.style.transition = '';
+}
+
+// event mouse
+dragImage.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    onDragStart(e.clientX, e.clientY);
+});
+window.addEventListener('mousemove', (e) => {
+    if (isDragging) onDragMove(e.clientX, e.clientY);
+});
+window.addEventListener('mouseup', onDragEnd);
+
+// event touch
+dragImage.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    onDragStart(touch.clientX, touch.clientY);
+});
+window.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    onDragMove(touch.clientX, touch.clientY);
+});
+window.addEventListener('touchend', onDragEnd);
+
+// cek overlap antara gambar dan api (flameEl)
+function checkOverlapAndBlow() {
+    if (!dragImage || !flameEl) return false;
+    const imgRect = dragImage.getBoundingClientRect();
+    const flameRect = flameEl.getBoundingClientRect();
+    
+    const overlap = !(imgRect.right < flameRect.left || 
+                      imgRect.left > flameRect.right || 
+                      imgRect.bottom < flameRect.top || 
+                      imgRect.top > flameRect.bottom);
+    return overlap;
+}
+
+let lastBlowTime = 0;
+const BLOW_COOLDOWN = 500;
+function monitorDragOverlap() {
+    const overlapping = checkOverlapAndBlow();
+    const now = Date.now();
+
+    if (overlapping) {
+        // mulai hitung waktu kalau baru overlap
+        if (!overlapStartTime) overlapStartTime = now;
+
+        const heldTime = now - overlapStartTime;
+
+        if (
+            heldTime > REQUIRED_HOLD_TIME &&
+            !alreadyBlownForDrag &&
+            blowCount < MAX_BLOW &&
+            !isFinalBlown &&
+            now - lastBlowTime > BLOW_COOLDOWN
+        ) {
+            dragImage.src = "tiup.png";
+            alreadyBlownForDrag = true;
+            lastBlowTime = now;
+
+            blowCandleAction();
+
+            setTimeout(() => {
+                if (!isFinalBlown) {
+                    dragImage.src = "gambar1.png";
+                    alreadyBlownForDrag = false;
+                }
+            }, 1500);
+
+            overlapStartTime = 0; // reset biar harus nempel lagi
+        }
+
+    } else {
+        // kalau lepas, reset timer
+        overlapStartTime = 0;
+
+        if (!isFinalBlown && !alreadyBlownForDrag) {
+            dragImage.src = "gambar1.png";
+        }
+
+        if (!isFinalBlown) alreadyBlownForDrag = false;
+    }
+}
+// pantau setiap 120ms saat drag atau gerakan
+setInterval(() => {
+    if (!isFinalBlown && mainContainer.style.opacity === '1') {
+        monitorDragOverlap();
+    }
+}, 250);
+
+// juga pantau saat mouse bergerak dan touch bergerak untuk realtime
+document.addEventListener('mousemove', () => {
+    if (!isFinalBlown && mainContainer.style.opacity === '1') monitorDragOverlap();
+});
+document.addEventListener('touchmove', () => {
+    if (!isFinalBlown && mainContainer.style.opacity === '1') monitorDragOverlap();
+});
+
+// ========== 4. DINAMIKA API BERKEDIP (DARI SCRIPT PERTAMA) ==========
+function startDynamicFlame() {
+    if (!flameEl) return;
+    const interval = setInterval(() => {
+        if (!document.body.contains(flameEl) || isFinalBlown) {
+            if (isFinalBlown) clearInterval(interval);
+            return;
+        }
+        if (flameEl.classList.contains('off')) return;
+        const sy = 0.97 + Math.random() * 0.1;
+        const sx = 0.95 + Math.random() * 0.08;
+        const ox = -51 + (Math.random() * 3 - 1.5);
+        flameEl.style.transform = `translateX(${ox}%) scale(${sx}, ${sy})`;
+        
+        if (innerFlameEl) {
+            const s = 0.95 + Math.random() * 0.1;
+            const o = -49 + (Math.random() * 3 - 1.5);
+            innerFlameEl.style.transform = `translateX(${o}%) scale(${s})`;
+        }
+        if (glowEl) {
+            const g = 85 + Math.random() * 25;
+            glowEl.style.width = glowEl.style.height = g + 'px';
+        }
+    }, 130);
+}
+
+// Jika halaman utama sudah muncul setelah kado dibuka, mulai efek dinamis setelah transisi
+const observer = new MutationObserver(() => {
+    if (mainContainer.style.opacity === '1' && !isFinalBlown) {
+        startDynamicFlame();
+        observer.disconnect();
+    }
+});
+observer.observe(mainContainer, { attributes: true, attributeFilter: ['style'] });
+
+// backup: jika sudah langsung terbuka (tapi tidak mungkin karena kado masih ada)
+if (mainContainer.style.opacity === '1') startDynamicFlame();
+
+// sentuhan ekstra: bisa juga klik pada api langsung (opsional) tapi kita pakai drag utama
+// menambahkan klik pada lilin (opsional untuk tiup sentuhan) agar lebih mirip interaksi
+if (flameEl) {
+    flameEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!isFinalBlown && blowCount < MAX_BLOW) {
+            blowCandleAction();
+            // ubah gambar jadi efek tiup sebentar
+            dragImage.src = "tiup.png";
+            setTimeout(() => {
+                if (!isFinalBlown) dragImage.src = "gambar1.png"
+            }, 700);
+        }
+    });
+}
+</script>
+</body>
+</html>
