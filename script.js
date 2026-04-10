@@ -64,14 +64,14 @@ function playBlowSound() {
     }
 }
 
-function playConfettiSound() {
+function playConfettiSound(volume = 0.6) {
     try {
         if (confettiSound) {
             confettiSound.pause();
             confettiSound.currentTime = 0;
         }
         confettiSound = new Audio('confetti.mp3');
-        confettiSound.volume = 0.6;
+        confettiSound.volume = volume;
         confettiSound.play().catch(e => console.log('Confetti sound error:', e));
     } catch (e) {
         console.log('Audio error:', e);
@@ -741,7 +741,7 @@ document.addEventListener('click', function(e) {
         // tambahan efek suara klik (opsional, kecil)
         try {
             // const clickSound = new Audio();
-            playConfettiSound()
+            playConfettiSound(0.1)
             // optional: pakai suara kecil atau tidak usah
             // biarkan hanya visual agar tidak mengganggu
         } catch(e) {}
