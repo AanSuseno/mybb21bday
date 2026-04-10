@@ -43,6 +43,7 @@ body {
     background: rgba(255, 245, 225, 0.7);
     border-radius: 40px;
     backdrop-filter: blur(4px);
+    text-align: center;
 }
 
 /* Animasi membesar (meledak) */

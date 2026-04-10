@@ -599,3 +599,182 @@ setTimeout(() => {
         }
     }
 }, 10000); // 10 detik timeout
+
+// ========== CLICK CONFETTI (SATISFYING EFFECT) ==========
+function createMiniConfetti(x, y) {
+    const colors = ['#ff4d6d', '#ffd166', '#06d6a0', '#118ab2', '#f72585', '#ff9f1c', '#e63946', '#2a9d8f'];
+    
+    for (let i = 0; i < 15; i++) {
+        const conf = document.createElement('div');
+        conf.className = 'mini-confetti';
+        
+        // posisi di sekitar klik
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 50 + Math.random() * 100;
+        const vx = Math.cos(angle) * velocity * (Math.random() * 0.5 + 0.5);
+        const vy = Math.sin(angle) * velocity * (Math.random() * 0.5 + 0.5) - 80;
+        
+        conf.style.left = (x - 10 + Math.random() * 20) + 'px';
+        conf.style.top = (y - 10 + Math.random() * 20) + 'px';
+        conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.width = (4 + Math.random() * 6) + 'px';
+        conf.style.height = (6 + Math.random() * 8) + 'px';
+        
+        // simpan velocity untuk animasi custom
+        conf.dataset.vx = vx;
+        conf.dataset.vy = vy;
+        conf.dataset.gravity = 400;
+        conf.dataset.startTime = Date.now();
+        
+        document.body.appendChild(conf);
+        
+        // animasi dengan requestAnimationFrame
+        let lastTime = Date.now();
+        function animateConfetti() {
+            const now = Date.now();
+            const dt = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            
+            let vx = parseFloat(conf.dataset.vx);
+            let vy = parseFloat(conf.dataset.vy);
+            const gravity = parseFloat(conf.dataset.gravity);
+            
+            vy += gravity * dt;
+            
+            let left = parseFloat(conf.style.left);
+            let top = parseFloat(conf.style.top);
+            
+            left += vx * dt;
+            top += vy * dt;
+            
+            conf.style.left = left + 'px';
+            conf.style.top = top + 'px';
+            
+            // rotasi
+            const rotation = (parseFloat(conf.dataset.rotation) || 0) + (vx * dt * 5);
+            conf.dataset.rotation = rotation;
+            conf.style.transform = `rotate(${rotation}deg)`;
+            
+            if (top < window.innerHeight + 100 && left > -100 && left < window.innerWidth + 100) {
+                requestAnimationFrame(animateConfetti);
+            } else {
+                conf.remove();
+            }
+        }
+        
+        requestAnimationFrame(animateConfetti);
+        
+        // fallback: hapus setelah 3 detik
+        setTimeout(() => {
+            if (conf.parentNode) conf.remove();
+        }, 3000);
+    }
+}
+
+// CSS untuk mini confetti
+const miniConfettiStyle = document.createElement('style');
+miniConfettiStyle.textContent = `
+    .mini-confetti {
+        position: fixed;
+        pointer-events: none;
+        z-index: 99999;
+        border-radius: 2px;
+        opacity: 0.9;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+`;
+document.head.appendChild(miniConfettiStyle);
+
+// Fungsi untuk mengecek apakah element yang diklik bisa di-drag atau tombol interaktif
+function isInteractiveElement(target) {
+    // elemen yang tidak boleh memicu confetti (karena sudah punya fungsi sendiri)
+    const interactiveSelectors = [
+        '#giftScreen', '.gift', '#giftIcon',  // kado
+        '#dragImage',                          // gambar drag
+        '.flame', '#flameEl',                  // api lilin
+        '.candle-container', '.candle-body',   // lilin
+        '.nav-arrow',                          // arrow foto (jika ada)
+        '.photo-slideshow', '#slideshowImg',   // foto slideshow
+        '.birthday-text',                      // teks birthday
+        'button', '[role="button"]',           // tombol umum
+        '.multi-candles', '.small-candle'      // lilin kecil
+    ];
+    
+    // cek apakah target atau parentnya adalah elemen interaktif
+    let el = target;
+    while (el && el !== document.body) {
+        for (let selector of interactiveSelectors) {
+            if (el.matches && el.matches(selector)) {
+                return true;
+            }
+        }
+        // cek juga apakah element sedang dalam proses drag
+        if (el.id === 'dragImage' && isDragging) {
+            return true;
+        }
+        el = el.parentElement;
+    }
+    
+    // cek apakah klik terjadi saat proses tiup/drag berlangsung
+    if (isDragging) return true;
+    
+    return false;
+}
+
+// Event listener untuk klik di seluruh halaman (setelah gift screen hilang)
+document.addEventListener('click', function(e) {
+    // cek apakah main container sudah muncul (gift sudah dibuka)
+    const mainIsVisible = mainContainer && mainContainer.style.opacity === '1';
+    
+    if (!mainIsVisible) return;
+    // if (isFinalBlown) return; // sudah selesai, biarkan confetti besar yang jalan
+    
+    // cek apakah klik pada elemen interaktif
+    if (!isInteractiveElement(e.target)) {
+        // dapatkan posisi klik
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        // ledakkan confetti kecil
+        createMiniConfetti(x, y);
+        
+        // tambahan efek suara klik (opsional, kecil)
+        try {
+            // const clickSound = new Audio();
+            playConfettiSound()
+            // optional: pakai suara kecil atau tidak usah
+            // biarkan hanya visual agar tidak mengganggu
+        } catch(e) {}
+    }
+});
+
+// Event untuk touch (mobile)
+document.addEventListener('touchstart', function(e) {
+    const mainIsVisible = mainContainer && mainContainer.style.opacity === '1';
+    if (!mainIsVisible) return;
+    // if (!isFinalBlown) return;
+    
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    if (!isInteractiveElement(target)) {
+        const x = touch.clientX;
+        const y = touch.clientY;
+        createMiniConfetti(x, y);
+    }
+});
+
+// Tambahan efek confetti saat drag selesai di area kosong (optional)
+let lastDragEndTime = 0;
+const originalOnDragEnd = onDragEnd;
+window.onDragEnd = function(e) {
+    if (originalOnDragEnd) originalOnDragEnd();
+    
+    // ledakkan confetti kecil saat drag selesai (biar makin satisfying)
+    const now = Date.now();
+    if (now - lastDragEndTime > 500 && !isFinalBlown) {
+        lastDragEndTime = now;
+        const rect = dragImage.getBoundingClientRect();
+        createMiniConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+    }
+};
